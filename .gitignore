@@ -1,0 +1,43 @@
+/.venv/
+/notebook.md
+.aider*
+
+# === 你已有的 ===
+.venv/
+notebook.md
+
+# === IDE ===
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# === 环境变量与密钥（绝对不能提交） ===
+.env
+.env.*
+!.env.example
+
+# === 数据库与日志 ===
+*.db
+*.sqlite3
+*.log
+logs/
+
+# === 测试与缓存 ===
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# === 上传/生成文件 ===
+uploads/
+static/
+media/
