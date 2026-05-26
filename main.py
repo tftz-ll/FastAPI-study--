@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 from routers import news, users
 from fastapi.middleware.cors import CORSMiddleware
+from utils.exception_handler import register_exception_handler
 
 app = FastAPI()
+
+register_exception_handler(app)
 
 app.add_middleware(
     CORSMiddleware,

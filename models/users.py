@@ -23,7 +23,7 @@ class User(Base):
     )
 
     username: Mapped[str] = mapped_column(String(50), primary_key=True, nullable=True, comment="用户名")
-    password: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, comment="用户密码(加密)")
+    password: Mapped[str] = mapped_column(String(255), unique=False, nullable=False, comment="用户密码(加密)")
     nickname: Mapped[Optional[str]] = mapped_column(String(50), comment="昵称")
     avatar: Mapped[Optional[str]] = mapped_column(String(255), comment="头像url",
                                                   default="")
