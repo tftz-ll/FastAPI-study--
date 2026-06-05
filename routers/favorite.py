@@ -46,7 +46,7 @@ async def add_favorite(
 # 取消收藏
 @router.delete("/remove")
 async def delete_favorite(
-        news_id:int = Query(..., alias="newsId"),
+        news_id: int = Query(..., alias="newsId"),
         user: User = Depends(get_current_user),
         db: AsyncSession = Depends(get_db),
 ):
