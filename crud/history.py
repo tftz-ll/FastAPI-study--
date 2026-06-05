@@ -98,7 +98,7 @@ async def delete_history_by_id(
         db: AsyncSession
 ):
     """
-    删除单挑浏览历史
+    删除单条浏览历史
     :param news_id: 新闻id
     :param user_id: 用户id
     :param db: 数据库会话

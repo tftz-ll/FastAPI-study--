@@ -23,6 +23,7 @@ redis_client = aredis.Redis(
     port=REDIS_PORT,
     db=REDIS_DB,
     decode_responses=True,   # 将字节数据解码为字符串
+    protocol=2
 )
 
 

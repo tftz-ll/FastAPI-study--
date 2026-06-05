@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from config.db_conf import get_db
-from crud import news
+from crud import news_cache_added
 
 # 创建AIPIRouter实例
 # 模块化路由，将不同的路由进行功能的细分，实际使用时再挂载到 main:app上运行
@@ -20,7 +20,7 @@ async def get_categories(db=Depends(get_db), skip: int = 0, limit: int = 100):
     # 1. 要有模型类：models中定义
     # 2. 要有查询数据库的方法：crud中封装；
     # 由于数据量较小，当前的分页计算还没有必要，因此不写, 直接返回一百条数据
-    categories = await news.get_categories(db, skip, limit)
+    categories = await news_cache_added.get_categories(db, skip, limit)
     return {
         "code": 200,
         "messages": "获取新闻分类成功",
@@ -41,8 +41,8 @@ async def get_news_list(
     # 3. 是否更多的判断：
     # 此外还要实现分页规则的处理（接口这里直接处理）
     skip_num = (page - 1) * pagesize  # 跳过页数
-    news_list = await news.get_news_list(db, category_id, skip_num, pagesize)
-    total = await news.get_news_count(db=db, category_id=category_id)
+    news_list = await news_cache_added.get_news_list(db, category_id, skip_num, pagesize)
+    total = await news_cache_added.get_news_count(db=db, category_id=category_id)
 
     # 跳过的数量加上当前页面数量 < 总量，则能够加载更多
     has_more = (skip_num + len(news_list)) < total
@@ -60,14 +60,14 @@ async def get_news_list(
 @router.get("/detail")
 async def get_news_detail(db=Depends(get_db), news_id: int = Query(..., alias="id")):
     # 新闻信息可以直接返回 使用id查询
-    news_detail = await news.get_news_detail(db=db, news_id=news_id)
+    news_detail = await news_cache_added.get_news_detail(db=db, news_id=news_id)
     if not news_detail:
         raise HTTPException(
             status_code=404,
             detail="新闻不存在"
         )
     # 每次打开浏览需要将新闻数据的浏览量（view）加一 每次调用这个方法的时候直接+1即可实现
-    views_update = await news.increase_news_views(db, news_detail.id)
+    views_update = await news_cache_added.increase_news_views(db, news_detail.id)
     if not views_update:
         raise HTTPException(
             status_code=404,
@@ -75,7 +75,7 @@ async def get_news_detail(db=Depends(get_db), news_id: int = Query(..., alias="i
         )  # 这里的异常处理是数据库查询操作的惯常性写法，如果id错误通常在上一个异常处理中就会进行拦截
 
     # relateNews模：同分类 id 的新闻；
-    related_news_list = await news.get_related_news(db, news_detail.id, news_detail.category_id, 5)
+    related_news_list = await news_cache_added.get_related_news(db, news_detail.id, news_detail.category_id, 5)
 
     return {
         "code": 200,
